@@ -38,6 +38,17 @@ def scrape_coursera():
                 return None
         except:
             return None
+        
+    def get_enroll_count(soup):
+        try:
+            enroll_count = soup.find('p', class_='cds-119 cds-Typography-base css-80vnnb cds-121').find('strong').find('span').text.strip()
+            return str(enroll_count)
+        except:
+            return None
+
+
+
+
 
     source = requests.get('https://www.coursera.org/sitemap~www~courses.xml').text
     soup = BeautifulSoup(source, 'xml')  # Use XML parser
@@ -49,12 +60,13 @@ def scrape_coursera():
         title = get_title(site_soup)
         rating_val = get_rating_val(site_soup)
         review_count = get_review_count(site_soup)
+        enrollment_count = get_enroll_count(site_soup)
         course_link = site.text
 
         if title and rating_val and review_count:
-            courses.append((title, rating_val, review_count, course_link))
+            courses.append((title, rating_val, review_count, course_link, enrollment_count))
 
-        if len(courses) >= 50:
+        if len(courses) >= 10:
             break
 
     # Sort courses by review count in descending order
@@ -71,7 +83,7 @@ def generate_html(courses):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Edu-Con Coursera's Top 50 Courses!</title>
+        <title>Edu-Con Coursera's Top 50 Courses</title>
         <style>
             h1{
                 font-family: 'Product Sans', sans-serif;
@@ -111,12 +123,14 @@ def generate_html(courses):
                 <th>Course Title</th>
                 <th>Rating</th>
                 <th>Review Count</th>
+                <th>Enrollment Count</th>
             </tr>
-            {% for title, rating, review_count, course_link in courses %}
+            {% for title, rating, review_count, course_link, enrollment_count in courses %}
                 <tr>
                     <td><a href="{{ course_link }}">{{ title }}</a></td>
                     <td>{{ rating }}</td>
                     <td>{{ review_count }}</td>
+                    <td>{{ enrollment_count }}</td>
                 </tr>
             {% endfor %}
         </table>
