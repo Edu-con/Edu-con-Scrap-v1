@@ -66,7 +66,7 @@ def scrape_coursera():
         if title and rating_val and review_count:
             courses.append((title, rating_val, review_count, course_link, enrollment_count))
 
-        if len(courses) >= 10:
+        if len(courses) >= 5:
             break
 
     # Sort courses by review count in descending order
