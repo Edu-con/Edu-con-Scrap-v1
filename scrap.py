@@ -38,14 +38,7 @@ def scrape_coursera():
                 return None
         except:
             return None
-        
-    def get_enroll_count(soup):
-        try:
-            enroll_count = soup.find('p', class_='cds-119 cds-Typography-base css-80vnnb cds-121').find('strong').find('span').text.strip()
-            return str(enroll_count)
-        except:
-            return None
-
+    
 
 
 
